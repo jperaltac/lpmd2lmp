@@ -5,6 +5,7 @@ def passingargs():
     parser = argparse.ArgumentParser(prog='lpmd2lmp', description='Convert lpmd to lammps (lmp) file.')
     parser.add_argument('-f', '--file', help='Input file with atomic configurations at lpmd format.')
     parser.add_argument('-o', '--out', help='Output file')
+    parser.add_argument('-t', '--template', help='A template (lammps) file to use as output')
     args = parser.parse_args()
     return args
 
