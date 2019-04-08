@@ -26,7 +26,7 @@ to_file += "atom_style      charge\n"
 to_file += region+"\n"
 
 for i in range(N):
-    to_file += str(atm_lst[i]) + "\n"
+    to_file += "create_atoms " + str(atm_lst[i]) + "\n"
 
 ofile = open(str(ARGS.out), 'w')
 ofile.write(to_file)
