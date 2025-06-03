@@ -1,5 +1,7 @@
-import argparse, os, sys
-from parselpmd2 import LPMD2
+import argparse
+import os
+import sys
+from .parselpmd2 import LPMD2
 
 def passingargs():
     parser = argparse.ArgumentParser(prog='lpmd2lmp', description='Convert lpmd to lammps (lmp) file.')
