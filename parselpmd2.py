@@ -61,59 +61,61 @@ class LPMD2:
 
     def Read(self, path):
         self.valid = False
-        f = open(path, 'r')
-        header1 = f.readline().strip()
-        if header1 != 'LPMD 2.0 L': raise WrongHeader(header1)
-        header2 = f.readline().strip()
-        if header2 == '': raise WrongHeader(header2)
-        hspl = [x.strip() for x in header2.split()]
-        if hspl[0] != 'HDR': raise WrongHeader(header2)
-        self.tags = hspl[1:]
-        while True:
-              atoms = f.readline()
-              if atoms == '': break
-              this_config = Configuration(self.tags)
-              cellvectors = [float(x.strip()) for x in f.readline().split()]
-              for q in range(3): this_config.cell[q] = tuple(cellvectors[3*q:3*q+3])
-              for i in range(int(atoms)):
-                  line = f.readline()
-                  if line == '': raise UnexpectedEndOfFile(path)
-                  this_config.append(SplitLine(line))
-              self.configs.append(this_config)
+        with open(path, 'r') as f:
+            header1 = f.readline().strip()
+            if header1 != 'LPMD 2.0 L': raise WrongHeader(header1)
+            header2 = f.readline().strip()
+            if header2 == '': raise WrongHeader(header2)
+            hspl = [x.strip() for x in header2.split()]
+            if hspl[0] != 'HDR': raise WrongHeader(header2)
+            self.tags = hspl[1:]
+            while True:
+                  atoms = f.readline()
+                  if atoms == '': break
+                  this_config = Configuration(self.tags)
+                  cellvectors = [float(x.strip()) for x in f.readline().split()]
+                  for q in range(3):
+                      this_config.cell[q] = tuple(cellvectors[3*q:3*q+3])
+                  for i in range(int(atoms)):
+                      line = f.readline()
+                      if line == '': raise UnexpectedEndOfFile(path)
+                      this_config.append(SplitLine(line))
+                  self.configs.append(this_config)
         self.valid = (len(self.configs) > 0)
 
     def ReadInPlace(self, path, temp_config, callback):
         self.valid = False
-        f = open(path, 'r')
-        header1 = f.readline().strip()
-        if header1 != 'LPMD 2.0 L': raise WrongHeader(header1)
-        header2 = f.readline().strip()
-        if header2 == '':raise WrongHeader(header2)
-        hspl = [x.strip() for x in header2.split()]
-        if hspl[0] != 'HDR': raise WrongHeader(header2)
-        self.tags = hspl[1:]
-        while True:
-              atoms = f.readline()
-              if atoms == '': break
-              this_config = Configuration(self.tags)
-              cellvectors = [float(x.strip()) for x in f.readline().split()]
-              for q in range(3): this_config.cell[q] = tuple(cellvectors[3*q:3*q+3])
-              for i in range(int(atoms)):
-                  line = f.readline()
-                  if line == '': raise UnexpectedEndOfFile(path)
-                  this_config.append(SplitLine(line))
-              temp_config[0] = this_config
-              callback(this_config)
+        with open(path, 'r') as f:
+            header1 = f.readline().strip()
+            if header1 != 'LPMD 2.0 L': raise WrongHeader(header1)
+            header2 = f.readline().strip()
+            if header2 == '':raise WrongHeader(header2)
+            hspl = [x.strip() for x in header2.split()]
+            if hspl[0] != 'HDR': raise WrongHeader(header2)
+            self.tags = hspl[1:]
+            while True:
+                  atoms = f.readline()
+                  if atoms == '': break
+                  this_config = Configuration(self.tags)
+                  cellvectors = [float(x.strip()) for x in f.readline().split()]
+                  for q in range(3):
+                      this_config.cell[q] = tuple(cellvectors[3*q:3*q+3])
+                  for i in range(int(atoms)):
+                      line = f.readline()
+                      if line == '': raise UnexpectedEndOfFile(path)
+                      this_config.append(SplitLine(line))
+                  temp_config[0] = this_config
+                  callback(this_config)
         self.Valid = True
 
     def Write(self, path):
-        f = open(path, 'w')
-        f.write('LPMD 2.0 L\nHDR '+' '.join(self.tags)+'\n')
-        for conf in self.configs:
-            f.write('%d\n' % len(conf)) 
-            cellvectors = list(conf.cell[0])+list(conf.cell[1])+list(conf.cell[2])
-            f.write(' '.join(str(x) for x in cellvectors)+'\n')
-            for i in range(len(conf)):
-                for t in self.tags: f.write(' '+cfmt(conf.Tag(t, i)))
-                f.write('\n')
+        with open(path, 'w') as f:
+            f.write('LPMD 2.0 L\nHDR '+' '.join(self.tags)+'\n')
+            for conf in self.configs:
+                f.write('%d\n' % len(conf))
+                cellvectors = list(conf.cell[0])+list(conf.cell[1])+list(conf.cell[2])
+                f.write(' '.join(str(x) for x in cellvectors)+'\n')
+                for i in range(len(conf)):
+                    for t in self.tags: f.write(' '+cfmt(conf.Tag(t, i)))
+                    f.write('\n')
 

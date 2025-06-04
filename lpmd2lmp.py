@@ -32,7 +32,8 @@ for i in range(N):
 to_file = ''
 
 if ARGS.template:
-    template_file = open(ARGS.template, 'r').read()
+    with open(ARGS.template, 'r') as f:
+        template_file = f.read()
     to_file = template_file
     to_file = to_file.replace('ALL_ATOM_STRING', ALL_ATOMS_STRING)
     to_file = to_file.replace('CELL_STRING', CELL_STRING)
@@ -42,6 +43,6 @@ else:
     to_file += CELL_STRING
     to_file += ALL_ATOMS_STRINGS
 
-ofile = open(str(ARGS.out), 'w')
-ofile.write(to_file)
+with open(str(ARGS.out), 'w') as ofile:
+    ofile.write(to_file)
 
