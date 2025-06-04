@@ -2,7 +2,7 @@
 
 
 import numpy as np
-from parselpmd2 import LPMD2
+from .parselpmd2 import LPMD2
 
 def py_ang(v1, v2):
     """ Returns the angle in radians between vectors 'v1' and 'v2'    """

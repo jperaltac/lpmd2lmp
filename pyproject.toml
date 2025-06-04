@@ -1,0 +1,17 @@
+[build-system]
+requires = ["setuptools>=42"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "lpmd2lmp"
+version = "0.1.0"
+description = "Convert lpmd format to lammps input"
+readme = "README.md"
+license = {file = "LICENSE"}
+authors = [{name = "Unknown"}]
+requires-python = ">=3.8"
+dependencies = ["numpy"]
+
+[project.scripts]
+lpmd2lmp = "lpmd2lmp.cli:main"
+
